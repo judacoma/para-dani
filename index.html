@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Dani</title>
+    <style>
+        body {
+            font-family: 'Sans-serif', Arial, sans-serif;
+            background-color: #0d1117;
+            color: #dc3545;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .casillas {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .casillas input {
+            width: 70px;
+            height: 70px;
+            font-size: 36px;
+            text-align: center;
+            margin: 0 15px;
+            border: 2px solid #dc3545;
+            background-color: #162447;
+            color: #ffffff;
+            border-radius: 5px;
+        }
+        .pistas {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .pista {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .pista span {
+            margin-top: 10px;
+            font-size: 16px;
+            text-align: center;
+            color: #ffffff;
+        }
+        .pista button {
+            font-size: 18px;
+            background-color: #dc3545;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 5px;
+        }
+        .pista button:hover {
+            background-color: #8a1f28;
+        }
+        button {
+            font-size: 20px;
+            background-color: #dc3545;
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #8a1f28;
+        }
+        #resultado {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        .hidden {
+            animation: flyOut 1s forwards;
+        }
+        @keyframes flyOut {
+            to {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+        #mensaje {
+            display: none;
+            font-size: 48px;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 300px;
+        }
+        #mensaje.fadeIn {
+            display: block;
+            animation: fadeIn 2s forwards;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        #botonPresion {
+            display: none;
+            font-size: 26px;
+            background-color: #dc3545;
+            color: #ffffff;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 0px;
+            transition: background-color 0.3s;
+            margin-top: -250px;
+
+            animation: none !important;
+        }
+        #botonPresion:hover {
+            background-color: #8a1f28;
+        }
+        .corazon {
+            position: absolute;
+            top: 40%;
+            left: 46%;
+            transform: translate(0%,-50%);
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            background-color: orange;
+            transform: rotate(-45deg);
+            animation: latido 1s infinite;
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.8);
+        }
+        .corazon::before,
+        .corazon::after {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-color: orange;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.8);
+        }
+        .corazon::before {
+            top: -75px;
+            left: 0;
+        }
+        .corazon::after {
+            left: 75px;
+            top: 0;
+        }
+        @keyframes latido {
+            0%, 100% {
+                transform: scale(1) rotate(-45deg);
+            }
+            50% {
+                transform: scale(1.2) rotate(-45deg);
+            }
+        }
+
+        .scene {
+            width: 270px;
+            height: 360px;
+            margin: 40px 0;
+            perspective: 600px;
+            position: absolute;
+            left: 50%;
+        }
+
+        .card1,.card2 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform-origin: center center;
+            display: none; /* Ocultamos las tarjetas desde el inicio */ 
+            animation: rotateInfinite 4s linear infinite;
+        }
+
+        @keyframes rotateInfinite {
+            from {
+                transform: rotateY(0);
+            }
+            to {
+                transform: rotateY(360deg);
+            }
+        }
+
+        .form {
+            position: absolute;
+            width: 92%;
+            height: 92%;
+            line-height: 260px;
+            color: rgb(255, 255, 255);
+            text-align: center;
+            font-weight: bold;
+            font-size: 40px;
+            backface-visibility: hidden;
+            border-radius: 10px;
+
+           
+        }
+        .front {
+            background: rgb(255, 255, 255);
+        }
+
+        .back {
+            background: #007900;
+            transform: rotateY(180deg);
+            font-size: 60px;
+            padding-top: 40px;
+            color: #ffffff;
+            text-shadow: 0px 0px 20px #00f000;
+            height: 80%;
+        }
+
+        .positiona1 {
+            position: absolute;
+            left: 9%;
+            top: 0%;
+        }
+
+        .positiona2 {
+            position: absolute;
+            left: 79%;
+            top: 50%;
+        }
+
+        .positionb1 {
+            position: absolute;
+            left: 9%;
+            top: 50%;
+        }
+
+        .positionb2 {
+            position: absolute;
+            left: 79%;
+            top: 0%;
+        }
+        
+        @keyframes deslizamientoDerecha {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes deslizamientoIzquierda {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .animate1{
+            animation: deslizamientoDerecha 1s forwards;
+        }
+
+        .animate2{
+            animation: deslizamientoIzquierda 1s forwards;
+        }
+
+        .foto{
+            width: 80%;
+            margin-top: 20px;
+
+            border-radius: 10px;
+        }
+
+        .fa{
+            margin-top: 30px;
+            width: 85%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="casillas">
+        <input type="text" id="casilla1" maxlength="1">
+        <input type="text" id="casilla2" maxlength="1">
+        <input type="text" id="casilla3" maxlength="1">
+        <input type="text" id="casilla4" maxlength="1">
+    </div>
+
+    <div class="pistas">
+        <div class="pista">
+            <button onclick="togglePista(1)">Pista 1</button>
+            <span id="pista1" style="display: none;"></span>
+            <button id="respuesta1" onclick="mostrarRespuesta(1)" style="display: none;">Respuesta</button>
+        </div>
+        <div class="pista">
+            <button onclick="togglePista(2)">Pista 2</button>
+            <span id="pista2" style="display: none;"></span>
+            <button id="respuesta2" onclick="mostrarRespuesta(2)" style="display: none;">Respuesta</button>
+        </div>
+        <div class="pista">
+            <button onclick="togglePista(3)">Pista 3</button>
+            <span id="pista3" style="display: none;"></span>
+            <button id="respuesta3" onclick="mostrarRespuesta(3)" style="display: none;">Respuesta</button>
+        </div>
+        <div class="pista">
+            <button onclick="togglePista(4)">Pista 4</button>
+            <span id="pista4" style="display: none;"></span>
+            <button id="respuesta4" onclick="mostrarRespuesta(4)" style="display: none;">Respuesta</button>
+        </div>
+    </div>
+
+    <button onclick="comprobarCodigo()">Comprobar</button>
+    <p id="resultado"></p>
+    <div id="mensaje">
+        <div class="corazon"></div>
+        <button id="botonPresion">¡PRESIONAME!</button>
+        <p>¡Bienvenida mi amor!</p>
+    </div>
+
+    <div class="scene positiona1">
+        <div class="card1 ani">
+            <div class="form front"><img class="foto fa" src="a.jpeg"></div>
+            <div class="form back"></div>
+        </div>
+    </div>
+
+    <div class="scene positionb1">
+        <div class="card1 ani">
+            <div class="form front"><img class="foto" src="b.jpeg"></div>
+            <div class="form back"></div>
+        </div>
+    </div>
+
+    <div class="scene positiona2">
+        <div class="card2 ani">
+            <div class="form front"><img class="foto" src="c.jpeg"></div>
+            <div class="form back"></div>
+        </div>
+    </div>
+
+    <div class="scene positionb2">
+        <div class="card2 ani">
+            <div class="form front"><img class="foto" src="d.jpeg"></div>
+            <div class="form back"></div>
+        </div>
+    </div>
+
+    <script>
+        const pistas = [
+            "la inicial de tu personaje favorito de arcane",
+            "inicial del personaje que te di de peluche",
+            "inicial de la empresa que es un infierno",
+            "Daniela me atrajo pero ___ me enamoro (la inicial de la palabra)"
+        ];
+
+        const respuestas = ["J", "L", "W", "T"];
+
+        function togglePista(numero) {
+            const pistaElement = document.getElementById(`pista${numero}`);
+            const respuestaButton = document.getElementById(`respuesta${numero}`);
+
+            if (pistaElement.style.display === "none") {
+                pistaElement.innerText = pistas[numero - 1];
+                pistaElement.style.display = "block";
+                respuestaButton.style.display = "inline-block";
+            } else {
+                pistaElement.style.display = "none";
+                respuestaButton.style.display = "none";
+            }
+        }
+
+        function mostrarRespuesta(numero) {
+            alert(respuestas[numero - 1]);
+        }
+
+        function comprobarCodigo() {
+            const casilla1 = document.getElementById("casilla1").value.toUpperCase();
+            const casilla2 = document.getElementById("casilla2").value.toUpperCase();
+            const casilla3 = document.getElementById("casilla3").value.toUpperCase();
+            const casilla4 = document.getElementById("casilla4").value.toUpperCase();
+
+            if (
+                casilla1 === respuestas[0] &&
+                casilla2 === respuestas[1] &&
+                casilla3 === respuestas[2] &&
+                casilla4 === respuestas[3]
+            ) {
+                iniciarAnimacion();
+            } else {
+                document.getElementById("resultado").innerText = "Código incorrecto. Intenta de nuevo.";
+            }
+        }
+
+        function iniciarAnimacion() {
+            const elementos = document.querySelectorAll(".casillas, .pistas, button, #resultado");
+            elementos.forEach(el => el.classList.add("hidden"));
+
+            setTimeout(() => {
+                document.getElementById("mensaje").classList.add("fadeIn");
+                document.getElementById("botonPresion").style.display = "inline-block";
+            }, 1000);
+        }
+
+        // Hacemos que las tarjetas aparezcan cuando se presiona el botón
+        document.getElementById("botonPresion").addEventListener("click", function() {
+            const tarjetas = document.querySelectorAll(".card1");
+            const tarjetas1 = document.querySelectorAll(".card2");
+            tarjetas.forEach(tarjeta => {
+                tarjeta.style.display = "block"; // Hacemos las tarjetas visibles
+                tarjeta.classList.add("animate1");
+            });
+            tarjetas1.forEach(tarjeta => {
+                tarjeta.style.display = "block"; // Hacemos las tarjetas visibles
+                tarjeta.classList.add("animate2");
+            });
+        });
+    </script>
+</body>
+</html>
